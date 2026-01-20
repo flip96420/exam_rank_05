@@ -87,7 +87,7 @@ std::string addition(const std::string str1, const std::string str2)
 	}
 	if (carry != 0)
 		result.push_back(carry + '0');
-	return (result);
+	return (reverse(result));
 }
 
 bigint bigint::operator+(const bigint &other) const

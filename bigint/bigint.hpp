@@ -1,5 +1,4 @@
-#ifndef BIGINT
-#define BIGINT
+#pragma once
 
 #include <sstream>
 #include <iostream>
@@ -9,7 +8,7 @@
 class bigint
 {
 	private:
-		std::string number;
+		std::string num;
 	public:
 		bigint();
 		bigint(unsigned int num);
@@ -50,6 +49,4 @@ class bigint
 };
 
 // Non-member function
-std::ostream &operator<<(std::ostream& output, const bigint &obj);
-
-#endif
+std::ostream &operator<<(std::ostream &output, const bigint &obj);
