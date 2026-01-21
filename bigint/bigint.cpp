@@ -13,13 +13,12 @@ bigint::bigint(const bigint &source) { *this = source; }
 
 bigint &bigint::operator=(const bigint &source)
 {
-	if (this == &source)
-		return (*this);
-	this->num = source.num;
+	if (this != &source)
+		this->num = source.num;
 	return (*this);
 }
 
-bigint::~bigint() {}
+bigint::~bigint () {}
 
 
 // Getter
@@ -34,7 +33,7 @@ std::string reverse(std::string str)
 {
 	std::string rev_str;
 
-	for (int i = (str.length() - 1); i >= 0; i--)
+	for (int i = str.length() - 1; i >= 0; i--)
 		rev_str.push_back(str[i]);
 	return (rev_str);
 }
@@ -43,22 +42,22 @@ std::string addition(std::string str1, std::string str2)
 {
 	std::string num1 = reverse(str1);
 	std::string num2 = reverse(str2);
-	int len1 = num1.length();
-	int len2 = num2.length();
-	
+	int len1 = str1.length();
+	int len2 = str2.length();
+
 	if (len1 > len2)
 	{
 		int digits = len1 - len2;
 		for (int i = 0; i < digits; i++)
-		num2.push_back('0');
+			num2.push_back('0');
 	}
-	else if (len2 > len1)
+	if (len2 > len1)
 	{
 		int digits = len2 - len1;
 		for (int i = 0; i < digits; i++)
-		num1.push_back('0');
+			num1.push_back('0');
 	}
-	
+
 	std::string result;
 	int carry = 0, digit1, digit2, res;
 	for (size_t i = 0; i < num1.length(); i++)
@@ -85,7 +84,7 @@ std::string addition(std::string str1, std::string str2)
 
 bigint bigint::operator+(const bigint &other) const
 {
-	bigint temp(other);
+	bigint temp = *this;
 	temp.num = addition(this->num, other.num);
 	return (temp);
 }
@@ -97,17 +96,17 @@ bigint &bigint::operator+=(const bigint &other)
 }
 
 
-// Increment
+// Increments
 bigint &bigint::operator++()
 {
-	*this = *this + bigint(1);
+	*this += bigint(1);
 	return (*this);
 }
 
 bigint bigint::operator++(int)
 {
 	bigint temp = *this;
-	*this = *this + bigint(1);
+	*this += bigint(1);
 	return (temp);
 }
 
@@ -154,14 +153,14 @@ unsigned int stringToUint(std::string str)
 
 bigint bigint::operator<<(const bigint &other) const
 {
-	bigint temp = *this << stringToUint(other.num);
-	return (temp);
+	bigint temp = *this;
+	return (temp << stringToUint(other.num));
 }
 
 bigint bigint::operator>>(const bigint &other) const
 {
-	bigint temp = *this >> stringToUint(other.num);
-	return (temp);
+	bigint temp = *this;
+	return (temp >> stringToUint(other.num));
 }
 
 bigint &bigint::operator<<=(const bigint &other)
