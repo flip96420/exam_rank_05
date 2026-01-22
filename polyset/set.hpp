@@ -1,22 +1,23 @@
 #pragma once
-#include "subject/searchable_bag.hpp"
 
-class set 
+#include "subject/subject/searchable_bag.hpp"
+
+class set
 {
 	private:
-		searchable_bag *bag;
-
+		searchable_bag &bag;
 	public:
-		set();
-		set(const searchable_bag &src);
-		set(const set &src);
-		set  &operator=(const set &src);
+		set() = delete;
+		set(const set &source) = delete;
+		set &operator=(const set &source) = delete;
+		set(searchable_bag &source);
 		~set();
 
-		void insert(int);
-		void insert(int *, int);
-		void print()const;
+		bool has(int item) const;
+		void insert(int item);
+		void insert(int *data, int size);
+		void print() const;
 		void clear();
-		bool has(int) const;
-		searchable_bag &get_bag();
+
+		const searchable_bag &getBag();
 };
