@@ -1,39 +1,17 @@
 #include "searchable_array_bag.hpp"
 
-searchable_array_bag::searchable_array_bag() {
-  size = 0;
-  data = nullptr;
+searchable_array_bag::searchable_array_bag() {}
+
+searchable_array_bag::searchable_array_bag(const searchable_array_bag &source) : array_bag(source) {}
+
+searchable_array_bag &searchable_array_bag::operator=(const searchable_array_bag &source)
+{
+	if (this != &source)
+		array_bag::operator=(source);
+	return (*this);
 }
 
-searchable_array_bag::searchable_array_bag(const searchable_array_bag &src) {
-  size = src.size;
-  data = new int[size];
-  for (int i = 0; i < size; i++) {
-	data[i] = src.data[i];
-  }
-}
-
-searchable_array_bag &searchable_array_bag::operator=(const searchable_array_bag &src) {
-	if (this != &src) {
-		if (data != nullptr) {
-			delete[] data;
-			data = nullptr;
-		}
-		size = src.size;
-		data = new int[size];
-		for (int i = 0; i < size; i++) {
-			data[i] = src.data[i];
-		}
-	}
-	return *this;
-}
-
-searchable_array_bag::~searchable_array_bag() {
-	if (data != nullptr) {
-		delete[] data;
-		data = nullptr;
-	}
-}
+searchable_array_bag::~searchable_array_bag() {}
 
 bool searchable_array_bag::has(int item) const
 {
