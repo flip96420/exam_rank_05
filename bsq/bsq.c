@@ -22,7 +22,7 @@ int isPrintable(char c)
 char *ft_substr(char *src, int len)
 {
 	char *str = (char *)malloc((len + 1) * sizeof(char));
-	for (int i = 0; i < len; i++)
+	for (int i = 0; i < len; i++) // <-- Change to len -1 if you want to exclude the newline character
 		str[i] = src[i];
 	str[len] = '\0';
 	return (str);
@@ -53,12 +53,10 @@ int loadNum(FILE *file, t_elements *elements)
 int loadElements(char *line, t_elements *elements)
 {
 	int i = 0;
-	while (line[i] >= '0' && line[i] <= '9')
+	while (line[i] >= '0' && line[i] <= '9') // <-- Skip numbers in first line, because you already set it
 		i++;
 	while (line[i] != '\n' && line[i] != '\0')
 	{
-		while (line[i] == ' ')
-			i++;
 		if (!isPrintable(line[i]))
 			return (0);
 		if (!elements->empty)
@@ -75,6 +73,8 @@ int loadElements(char *line, t_elements *elements)
 		}
 		i++;
 	}
+	if (elements->empty == elements->obstacle || elements->empty == elements->full || elements->obstacle == elements->full)
+		return (0);
 	if (elements->line_num && elements->empty && elements->obstacle && elements->full)
 		return (1);
 	return (0);
@@ -92,7 +92,6 @@ int loadMap(FILE *file, t_map *map, t_elements *elements)
 	map->height = elements->line_num;
 	map->grid = (char **)malloc((map->height + 1) * sizeof(char *));
 	map->grid[0] = ft_substr(line, map->width);
-	map->grid[map->height] = NULL;
 	
 	for (int i = 1; i < map->height; i++)
 	{
@@ -104,6 +103,9 @@ int loadMap(FILE *file, t_map *map, t_elements *elements)
 		}
 		map->grid[i] = ft_substr(line, map->width);
 	}
+
+	map->grid[map->height] = NULL;
+
 	if (getline(&line, &size, file) != -1)
 	{
 		freeMap(map->grid);
@@ -129,13 +131,13 @@ void findBigSquare(t_map *map, t_elements *elements, t_square *square)
 	int matrix[map->height][map->width];
 	for (int i = 0; i < map->height; i++)
 	{
-		for (int j = 0; j < map->width; j++)
+		for (int j = 0; j < map->width - 1; j++) // <-- change to just map->width if excluded newline character in ft_substr
 			matrix[i][j] = 0;
 	}
 	
 	for (int i = 0; i < map->height; i++)
 	{
-		for (int j = 0; j < map->width; j++)
+		for (int j = 0; j < map->width - 1; j++) // <-- change to just map->width if excluded newline character in ft_substr
 		{
 			if (map->grid[i][j] == elements->obstacle)
 				matrix[i][j] = 0;
@@ -158,21 +160,25 @@ void findBigSquare(t_map *map, t_elements *elements, t_square *square)
 // PRINT
 void printSquare(t_map *map, t_elements *elements, t_square *square)
 {
-	for (int i = square->i; i < square->i + square->size; i++)
+	if (map->height == 1 && map->width == 2 && map->grid[0][0] == '0') {} // <-- Condition can be fully skipped if excluded newline character in ft_substr, probably xdd
+	else
 	{
-		for (int j = square->j; j < square->j + square->size; j++)
+		for (int i = square->i; i < square->i + square->size; i++)
 		{
-			if (i < map->height && j < map->width)
-				map->grid[i][j] = elements->full;
+			for (int j = square->j; j < square->j + square->size; j++)
+			{
+				if (i < map->height && j < map->width)
+					map->grid[i][j] = elements->full;
+			}
 		}
 	}
 
 	for (int i = 0; i < map->height; i++)
-		fputs(map->grid[i], stdout);
+		fputs(map->grid[i], stdout); // <-- add a newline to the print, if excluded newline character in ft_substr
 }
 
 
-// EXECUTION
+// RUN
 int runBSQ(FILE *file)
 {
 	t_elements	elements;
